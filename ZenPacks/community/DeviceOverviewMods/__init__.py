@@ -1,65 +1,31 @@
-# Nothing is required in this __init__.py, but it is an excellent place to do
-# many things in a ZenPack.
+# Device is the Python object that represents a standard Zenoss Device, defined in $ZENHOME/Products/ZenModel/Device.py
+# DeviceInfo is the Python object that represents the info object of that standard Device, defined in $ZENHOME/Products/Zuul/infos/device.py
+# Both need to be imported in order to monkey patch them.
 #
-# The example below which is commented out by default creates a custom subclass
-# of the ZenPack class. This allows you to define custom installation and
-# removal routines for your ZenPack. If you don't need this kind of flexibility
-# you should leave the section commented out and let the standard ZenPack
-# class be used.
-#
-# Code included in the global scope of this file will be executed at startup
-# in any Zope client. This includes Zope itself (the web interface) and zenhub.
-# This makes this the perfect place to alter lower-level stock behavior
-# through monkey-patching.
-
-# import Globals
-#
-# from Products.ZenModel.ZenPack import ZenPack as ZenPackBase
-# from Products.ZenUtils.Utils import unused
-#
-# unused(Globals)
-#
-#
-# class ZenPack(ZenPackBase):
-#
-#     # All zProperties defined here will automatically be created when the
-#     # ZenPack is installed.
-#     packZProperties = [
-#         ('zExampleString', 'default value', 'string'),
-#         ('zExampleInt', 411, 'int'),
-#         ('zExamplePassword', 'notsecure', 'password'),
-#         ]
-#
-#     def install(self, dmd):
-#         ZenPackBase.install(self, dmd)
-#
-#         # Put your customer installation logic here.
-#         pass
-#
-#     def remove(self, dmd, leaveObjects=False):
-#         if not leaveObjects:
-#             # When a ZenPack is removed the remove method will be called with
-#             # leaveObjects set to False. This means that you likely want to
-#             # make sure that leaveObjects is set to false before executing
-#             # your custom removal code.
-#             pass
-#
-#         ZenPackBase.remove(self, dmd, leaveObjects=leaveObjects)
-
+# Check  $ZENHOME/Products/Zuul/infos/device.py for the names of the standard DeviceInfo fields that can be manipulated in the GUI.
 from Products.ZenModel.Device import Device
 from Products.Zuul.infos.device import DeviceInfo
 from Products.Zuul.infos import ProxyProperty
 
 
-# Set a default value for a device's contact.
-Device.contact = ''
+# Monkey patching in __init__.py can change or add properties or methods, on existing objects
+
+# The Device object already exists but does not have a contact property
+# Create the contact property and set a default value for a device's contact.
+Device.contact = 'Default is blank'
 
 # Make a device's contact available through the API.
 DeviceInfo.contact = ProxyProperty('contact')
+
+# The Device object already exists but we need a new method to deliver a particular zProperty (zCommandUsername)
+# You need to use the @property decorator for this to work.
 
 @property
 def zCommandUsername(self):
     return self._object.getProperty('zCommandUsername')
 
-DeviceInfo.zCommandUsername = zCommandUsername
+# Make the new property method  available through the API.
+# It is the property of DeviceInfo (ie. zCommandUsernameAPI here) that must match with
+#    a "name" field in a JavaScript .js file
+DeviceInfo.zCommandUsernameAPI = zCommandUsername
 

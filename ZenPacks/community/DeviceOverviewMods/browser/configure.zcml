@@ -13,14 +13,40 @@
     <!-- name can be anything unique -->
     <!-- In paths, /++resource++DeviceOverViewMods substitutes the DeviceOverViewMods name
          defined above, into the path to the Javascript file, resulting in 
-         resources/js/custom-overview-device.js, relative to where this configure.zcml is -->
+         resources/js/DeviceOverviewZProps.js, relative to where this configure.zcml is -->
     <!-- The weight field indicates the order of multiple viewlets where 1 would be at the top -->
-    <!-- In for, the path is to the product-provided Device class -->
+    <!-- In for, the path is to the product-provided Device object class (not Zenoss DeviceClass) -->
 
     <viewlet
         name="js-DeviceOverviewZProps"
         paths="/++resource++DeviceOverViewMods/js/DeviceOverviewZProps.js"
         for="Products.ZenModel.Device.Device"
+        weight="10"
+        manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
+        class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"
+        permission="zope2.Public"
+        />
+
+    <viewlet
+        name="js-DeviceOverviewContact"
+        paths="/++resource++DeviceOverViewMods/js/DeviceOverviewContact.js"
+        for="Products.ZenModel.Device.Device"
+        weight="10"
+        manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
+        class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"
+        permission="zope2.Public"
+        />
+
+
+    <!-- Make the msexchangeversion field only shown for devices of object class ZenPacks.zenoss.Microsoft.Windows.Device.Device
+    which is shipped with the Zenoss-provided ZenPacks.zenoss.Microsoft.Windows .  
+    msexchangeversion is a property created on this device class by the Windows ZenPack with 
+    an info object also called msexchangeversion so no work required in our __init__.py -->
+
+    <viewlet
+        name="js-DeviceOverviewMsexchangeversion"
+        paths="/++resource++DeviceOverViewMods/js/DeviceOverviewMsexchangeversion.js"
+        for="ZenPacks.zenoss.Microsoft.Windows.Device.Device"
         weight="10"
         manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
         class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"

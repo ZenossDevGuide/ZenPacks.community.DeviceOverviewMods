@@ -31,8 +31,30 @@ Monitoring Templates
 GUI modifications
 -----------------
 
-* The Overview display for a device of object class LogMatchDevice has the SNMP panel
-  modified to remove the SNMP community name and to add versionTag and versionDate.
+The Device Overview panel is made up of several separate areas, each of which can be independently modified:
+
+*    deviceoverviewpanel_summary (top-left)
+*    deviceoverviewpanel_idsummary (top-middle)
+*    deviceoverviewpanel_descriptionsummary (top-right)
+*    deviceoverviewpanel_customsummary (bottom-left)
+*    deviceoverviewpanel_systemsummary (inner panel in bottom-left)
+*    deviceoverviewpanel_snmpsummary (bottom-right)
+
+These panels are defined in $ZENHOME/Products/ZenUI3/browser/resources/js/zenoss/DeviceOverviewPanel.js
+
+This ZenPack provides the following:
+
+* For devices of object class DEVICE:
+
+  * Add a contact property to the systemsummary panel
+  * Add a zCommandUsername to the snmpsummary panel
+  * Remove the snmpcommunity property from the snmpsummary panel
+
+* For devices of object class ZenPacks.zenoss.Microsoft.Windows.Device.Device:
+  
+  * Add an msexchangeversion property to the descriptionsummary panel
+
+The contact property and the zCommandUsername property method are defined in __init__.py in the base directory.
 
 Usage
 =====
