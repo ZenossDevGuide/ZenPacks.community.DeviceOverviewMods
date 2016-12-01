@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configure xmlns="http://namespaces.zope.org/browser">
+
+    <!-- A resource directory contains static web content. -->
+    <!-- name can be anything unique but is used below in the paths statement -->
+    <!-- directory is the path from this configure.zcml to where the js directory is -->
+    <resourceDirectory
+        name="DeviceOverViewMods"
+        directory="resources"
+        />
+
+    <!-- Register custom JavaScript  -->
+    <!-- name can be anything unique -->
+    <!-- In paths, /++resource++DeviceOverViewMods substitutes the DeviceOverViewMods name
+         defined above, into the path to the Javascript file, resulting in 
+         resources/js/custom-overview-device.js, relative to where this configure.zcml is -->
+    <!-- The weight field indicates the order of multiple viewlets where 1 would be at the top -->
+    <!-- In for, the path is to the product-provided Device class -->
+
+    <viewlet
+        name="js-DeviceOverviewZProps"
+        paths="/++resource++DeviceOverViewMods/js/DeviceOverviewZProps.js"
+        for="Products.ZenModel.Device.Device"
+        weight="10"
+        manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
+        class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"
+        permission="zope2.Public"
+        />
+
+</configure>
